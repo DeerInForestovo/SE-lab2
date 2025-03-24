@@ -116,8 +116,14 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${org.eclipse.jetty.jetty-maven-plugin.version}</version>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.12.0</version>
+      </plugin>
     </plugins>
-  </build>
+</build>
 
   <modules>
     <module>docs-core</module>
@@ -491,4 +497,11 @@
     </dependencies>
   </dependencyManagement>
 
+  <distributionManagement>
+    <site>
+      <id>internal.repo</id>
+      <name>Temporary Staging Repository</name>
+      <url>file://${project.build.directory}/mvn-repo</url>
+    </site>
+  </distributionManagement>
 </project>
