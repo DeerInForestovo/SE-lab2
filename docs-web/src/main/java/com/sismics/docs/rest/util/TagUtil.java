@@ -17,7 +17,7 @@ public class TagUtil {
      *
      * @param parentTagDto Parent tag
      * @param allTagDtoList List of all tags
-     * @return Children tags
+     * @apiSuccess Children tags
      */
     public static List<TagDto> findChildren(TagDto parentTagDto, List<TagDto> allTagDtoList) {
         List<TagDto> childrenTagDtoList = new ArrayList<>();
@@ -37,7 +37,7 @@ public class TagUtil {
      *
      * @param name Name
      * @param allTagDtoList List of all tags
-     * @return List of filtered tags
+     * @apiSuccess List of filtered tags
      */
     public static List<TagDto> findByName(String name, List<TagDto> allTagDtoList) {
         if (name.isEmpty()) {

@@ -43,7 +43,7 @@ public class DocumentSearchCriteriaUtil {
      *
      * @param search        Search query
      * @param allTagDtoList List of tags
-     * @return DocumentCriteria
+     * @apiSuccess DocumentCriteria
      */
     public static DocumentCriteria parseSearchQuery(String search, List<TagDto> allTagDtoList) {
         DocumentCriteria documentCriteria = new DocumentCriteria();

@@ -168,9 +168,9 @@ public class DocumentResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @param shareId Share ID
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam shareId Share ID
+     * @apiSuccess Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}")
@@ -303,12 +303,12 @@ public class DocumentResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @param shareId Share ID
-     * @param metadata Export metadata
-     * @param fitImageToPage Fit images to page
-     * @param marginStr Margins
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam shareId Share ID
+     * @apiParam metadata Export metadata
+     * @apiParam fitImageToPage Fit images to page
+     * @apiParam marginStr Margins
+     * @apiSuccess Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}/pdf")
@@ -416,13 +416,13 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param limit Page limit
-     * @param offset Page offset
-     * @param sortColumn Sort column
-     * @param asc Sorting
-     * @param search Search query
-     * @param files Files list
-     * @return Response
+     * @apiParam limit Page limit
+     * @apiParam offset Page offset
+     * @apiParam sortColumn Sort column
+     * @apiParam asc Sorting
+     * @apiParam search Search query
+     * @apiParam files Files list
+     * @apiSuccess Response
      */
     @GET
     @Path("list")
@@ -554,13 +554,13 @@ public class DocumentResource extends BaseResource {
      * @apiGroup Document
      * @apiVersion 1.12.0
      *
-     * @param limit      Page limit
-     * @param offset     Page offset
-     * @param sortColumn Sort column
-     * @param asc        Sorting
-     * @param search     Search query
-     * @param files      Files list
-     * @return Response
+     * @apiParam limit      Page limit
+     * @apiParam offset     Page offset
+     * @apiParam sortColumn Sort column
+     * @apiParam asc        Sorting
+     * @apiParam search     Search query
+     * @apiParam files      Files list
+     * @apiSuccess Response
      */
     @POST
     @Path("list")
@@ -638,23 +638,23 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param title Title
-     * @param description Description
-     * @param subject Subject
-     * @param identifier Identifier
-     * @param publisher Publisher
-     * @param format Format
-     * @param source Source
-     * @param type Type
-     * @param coverage Coverage
-     * @param rights Rights
-     * @param tagList Tags
-     * @param relationList Relations
-     * @param metadataIdList Metadata ID list
-     * @param metadataValueList Metadata value list
-     * @param language Language
-     * @param createDateStr Creation date
-     * @return Response
+     * @apiParam title Title
+     * @apiParam description Description
+     * @apiParam subject Subject
+     * @apiParam identifier Identifier
+     * @apiParam publisher Publisher
+     * @apiParam format Format
+     * @apiParam source Source
+     * @apiParam type Type
+     * @apiParam coverage Coverage
+     * @apiParam rights Rights
+     * @apiParam tagList Tags
+     * @apiParam relationList Relations
+     * @apiParam metadataIdList Metadata ID list
+     * @apiParam metadataValueList Metadata value list
+     * @apiParam language Language
+     * @apiParam createDateStr Creation date
+     * @apiSuccess Response
      */
     @PUT
     public Response add(
@@ -772,9 +772,9 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param title Title
-     * @param description Description
-     * @return Response
+     * @apiParam title Title
+     * @apiParam description Description
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}")
@@ -890,8 +890,8 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param fileBodyPart File to import
-     * @return Response
+     * @apiParam fileBodyPart File to import
+     * @apiSuccess Response
      */
     @PUT
     @Path("eml")
@@ -984,8 +984,8 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param id Document ID
-     * @return Response
+     * @apiParam id Document ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")
@@ -1031,8 +1031,8 @@ public class DocumentResource extends BaseResource {
     /**
      * Update tags list on a document.
      *
-     * @param documentId Document ID
-     * @param tagList Tag ID list
+     * @apiParam documentId Document ID
+     * @apiParam tagList Tag ID list
      */
     private void updateTagList(String documentId, List<String> tagList) {
         if (tagList != null) {
@@ -1056,8 +1056,8 @@ public class DocumentResource extends BaseResource {
     /**
      * Update relations list on a document.
      *
-     * @param documentId Document ID
-     * @param relationList Relation ID list
+     * @apiParam documentId Document ID
+     * @apiParam relationList Relation ID list
      */
     private void updateRelationList(String documentId, List<String> relationList) {
         if (relationList != null) {

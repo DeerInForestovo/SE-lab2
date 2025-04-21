@@ -36,8 +36,8 @@ public class VocabularyResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param name Name
-     * @return Response
+     * @apiParam name Name
+     * @apiSuccess Response
      */
     @GET
     @Path("{name: [a-z0-9\\-]+}")
@@ -82,10 +82,10 @@ public class VocabularyResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param name Name
-     * @param value Value
-     * @param orderStr Order
-     * @return Response
+     * @apiParam name Name
+     * @apiParam value Value
+     * @apiParam orderStr Order
+     * @apiSuccess Response
      */
     @PUT
     public Response add(@FormParam("name") String name,
@@ -139,11 +139,11 @@ public class VocabularyResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param id ID
-     * @param name Name
-     * @param value Value
-     * @param orderStr Order
-     * @return Response
+     * @apiParam id ID
+     * @apiParam name Name
+     * @apiParam value Value
+     * @apiParam orderStr Order
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}")
@@ -208,8 +208,8 @@ public class VocabularyResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param id ID
-     * @return Response
+     * @apiParam id ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")

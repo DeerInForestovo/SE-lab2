@@ -69,7 +69,7 @@ public abstract class BaseResource {
     /**
      * This method is used to check if the user is authenticated.
      * 
-     * @return True if the user is authenticated and not anonymous
+     * @apiSuccess True if the user is authenticated and not anonymous
      */
     protected boolean authenticate() {
         Principal principal = (Principal) request.getAttribute(SecurityFilter.PRINCIPAL_ATTRIBUTE);
@@ -84,7 +84,7 @@ public abstract class BaseResource {
     /**
      * Checks if the user has a base function. Throw an exception if the check fails.
      * 
-     * @param baseFunction Base function to check
+     * @apiParam baseFunction Base function to check
      */
     void checkBaseFunction(BaseFunction baseFunction) {
         if (!hasBaseFunction(baseFunction)) {
@@ -95,8 +95,8 @@ public abstract class BaseResource {
     /**
      * Checks if the user has a base function.
      * 
-     * @param baseFunction Base function to check
-     * @return True if the user has the base function
+     * @apiParam baseFunction Base function to check
+     * @apiSuccess True if the user has the base function
      */
     boolean hasBaseFunction(BaseFunction baseFunction) {
         if (!(principal instanceof UserPrincipal)) {
@@ -109,8 +109,8 @@ public abstract class BaseResource {
     /**
      * Returns a list of ACL target ID.
      * 
-     * @param shareId Share ID (optional)
-     * @return List of ACL target ID
+     * @apiParam shareId Share ID (optional)
+     * @apiSuccess List of ACL target ID
      */
     List<String> getTargetIdList(String shareId) {
         List<String> targetIdList = Lists.newArrayList(principal.getGroupIdSet());

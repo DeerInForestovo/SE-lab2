@@ -49,7 +49,7 @@ public class RouteModelResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     public Response list(
@@ -90,7 +90,7 @@ public class RouteModelResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @PUT
     public Response add(@FormParam("name") String name, @FormParam("steps") String steps) {
@@ -136,7 +136,7 @@ public class RouteModelResource extends BaseResource {
     /**
      * Validate route model steps.
      *
-     * @param steps Route model steps data
+     * @apiParam steps Route model steps data
      */
     private void validateRouteModelSteps(String steps) {
         UserDao userDao = new UserDao();
@@ -275,7 +275,7 @@ public class RouteModelResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}")
@@ -322,7 +322,7 @@ public class RouteModelResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")
@@ -364,8 +364,8 @@ public class RouteModelResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param id RouteModel name
-     * @return Response
+     * @apiParam id RouteModel name
+     * @apiSuccess Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}")

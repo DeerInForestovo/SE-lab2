@@ -70,10 +70,10 @@ public class UserResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param username User's username
-     * @param password Password
-     * @param email E-Mail
-     * @return Response
+     * @apiParam username User's username
+     * @apiParam password Password
+     * @apiParam email E-Mail
+     * @apiSuccess Response
      */
     @PUT
     public Response register(
@@ -135,9 +135,9 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param password Password
-     * @param email E-Mail
-     * @return Response
+     * @apiParam password Password
+     * @apiParam email E-Mail
+     * @apiSuccess Response
      */
     @POST
     public Response update(
@@ -189,10 +189,10 @@ public class UserResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param username Username
-     * @param password Password
-     * @param email E-Mail
-     * @return Response
+     * @apiParam username Username
+     * @apiParam password Password
+     * @apiParam email E-Mail
+     * @apiSuccess Response
      */
     @POST
     @Path("{username: [a-zA-Z0-9_@.-]+}")
@@ -275,10 +275,10 @@ public class UserResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param username Username
-     * @param password Password
-     * @param longLasted Remember the user next time, create a long lasted session.
-     * @return Response
+     * @apiParam username Username
+     * @apiParam password Password
+     * @apiParam longLasted Remember the user next time, create a long lasted session.
+     * @apiSuccess Response
      */
     @POST
     @Path("login")
@@ -359,7 +359,7 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("logout")
@@ -408,7 +408,7 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @DELETE
     public Response delete() {
@@ -460,8 +460,8 @@ public class UserResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param username Username
-     * @return Response
+     * @apiParam username Username
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{username: [a-zA-Z0-9_@.-]+}")
@@ -526,8 +526,8 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param username Username
-     * @return Response
+     * @apiParam username Username
+     * @apiSuccess Response
      */
     @POST
     @Path("{username: [a-zA-Z0-9_@.-]+}/disable_totp")
@@ -573,7 +573,7 @@ public class UserResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     public Response info() {
@@ -648,8 +648,8 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param username Username
-     * @return Response
+     * @apiParam username Username
+     * @apiSuccess Response
      */
     @GET
     @Path("{username: [a-zA-Z0-9_@.-]+}")
@@ -708,10 +708,10 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param sortColumn Sort index
-     * @param asc If true, ascending sorting, else descending
-     * @param groupName Only return users from this group
-     * @return Response
+     * @apiParam sortColumn Sort index
+     * @apiParam asc If true, ascending sorting, else descending
+     * @apiParam groupName Only return users from this group
+     * @apiSuccess Response
      */
     @GET
     @Path("list")
@@ -772,7 +772,7 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     @Path("session")
@@ -819,7 +819,7 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @DELETE
     @Path("session")
@@ -853,7 +853,7 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.7.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("onboarded")
@@ -887,7 +887,7 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("enable_totp")
@@ -924,7 +924,7 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.6.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("test_totp")
@@ -965,8 +965,8 @@ public class UserResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param password Password
-     * @return Response
+     * @apiParam password Password
+     * @apiSuccess Response
      */
     @POST
     @Path("disable_totp")
@@ -1007,8 +1007,8 @@ public class UserResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param username Username
-     * @return Response
+     * @apiParam username Username
+     * @apiSuccess Response
      */
     @POST
     @Path("password_lost")
@@ -1062,9 +1062,9 @@ public class UserResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param passwordResetKey Password reset key
-     * @param password New password
-     * @return Response
+     * @apiParam passwordResetKey Password reset key
+     * @apiParam password New password
+     * @apiSuccess Response
      */
     @POST
     @Path("password_reset")
@@ -1104,7 +1104,7 @@ public class UserResource extends BaseResource {
     /**
      * Returns the authentication token value.
      *
-     * @return Token value
+     * @apiSuccess Token value
      */
     private String getAuthToken() {
         if (request.getCookies() != null) {
@@ -1120,8 +1120,8 @@ public class UserResource extends BaseResource {
 
     /**
      * Send the events about documents and files being deleted.
-     * @param documentList A document list
-     * @param fileList A file list
+     * @apiParam documentList A document list
+     * @apiParam fileList A file list
      */
     private void sendDeletionEvents(List<Document> documentList, List<File> fileList) {
         // Raise deleted events for documents

@@ -83,9 +83,9 @@ public class FileResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @param fileBodyPart File to add
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam fileBodyPart File to add
+     * @apiSuccess Response
      */
     @PUT
     @Consumes("multipart/form-data")
@@ -158,8 +158,8 @@ public class FileResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param id File ID
-     * @return Response
+     * @apiParam id File ID
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}/attach")
@@ -236,8 +236,8 @@ public class FileResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.6.0
      *
-     * @param id File ID
-     * @return Response
+     * @apiParam id File ID
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}")
@@ -278,8 +278,8 @@ public class FileResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.6.0
      *
-     * @param id File ID
-     * @return Response
+     * @apiParam id File ID
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}/process")
@@ -340,9 +340,9 @@ public class FileResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @param idList List of files ID in the new order
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam idList List of files ID in the new order
+     * @apiSuccess Response
      */
     @POST
     @Path("reorder")
@@ -407,9 +407,9 @@ public class FileResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @param shareId Sharing ID
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam shareId Sharing ID
+     * @apiSuccess Response
      */
     @GET
     @Path("list")
@@ -457,8 +457,8 @@ public class FileResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param id File ID
-     * @return Response
+     * @apiParam id File ID
+     * @apiSuccess Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}/versions")
@@ -503,8 +503,8 @@ public class FileResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param id File ID
-     * @return Response
+     * @apiParam id File ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")
@@ -559,8 +559,8 @@ public class FileResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param fileId File ID
-     * @return Response
+     * @apiParam fileId File ID
+     * @apiSuccess Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}/data")
@@ -665,9 +665,9 @@ public class FileResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @param shareId Share ID
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam shareId Share ID
+     * @apiSuccess Response
      */
     @GET
     @Path("zip")
@@ -704,8 +704,8 @@ public class FileResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.11.0
      *
-     * @param filesIdsList Files IDs
-     * @return Response
+     * @apiParam filesIdsList Files IDs
+     * @apiSuccess Response
      */
     @POST
     @Path("zip")
@@ -759,9 +759,9 @@ public class FileResource extends BaseResource {
     /**
      * Find a file with access rights checking.
      *
-     * @param fileId File ID
-     * @param shareId Share ID
-     * @return File
+     * @apiParam fileId File ID
+     * @apiParam shareId Share ID
+     * @apiSuccess File
      */
     private File findFile(String fileId, String shareId) {
         FileDao fileDao = new FileDao();
@@ -777,8 +777,8 @@ public class FileResource extends BaseResource {
     /**
      * Find a list of files with access rights checking.
      *
-     * @param filesIds Files IDs
-     * @return List<File>
+     * @apiParam filesIds Files IDs
+     * @apiSuccess List<File>
      */
     private List<File> findFiles(List<String> filesIds) {
         FileDao fileDao = new FileDao();
@@ -791,8 +791,8 @@ public class FileResource extends BaseResource {
 
     /**
      * Check if a file is accessible to the current user
-     * @param shareId Share ID
-     * @param file
+     * @apiParam shareId Share ID
+     * @apiParam file
      */
     private void checkFileAccessible(String shareId, File file) {
         if (file.getDocumentId() == null) {

@@ -40,7 +40,7 @@ public class MetadataResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.7.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     public Response list(
@@ -83,9 +83,9 @@ public class MetadataResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.7.0
      *
-     * @param name Name
-     * @param typeStr Type
-     * @return Response
+     * @apiParam name Name
+     * @apiParam typeStr Type
+     * @apiSuccess Response
      */
     @PUT
     public Response add(@FormParam("name") String name,
@@ -131,9 +131,9 @@ public class MetadataResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.7.0
      *
-     * @param id ID
-     * @param name Name
-     * @return Response
+     * @apiParam id ID
+     * @apiParam name Name
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}")
@@ -179,8 +179,8 @@ public class MetadataResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.7.0
      *
-     * @param id ID
-     * @return Response
+     * @apiParam id ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")

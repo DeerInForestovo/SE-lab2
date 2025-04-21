@@ -56,11 +56,11 @@ public class AclResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param sourceId Source ID
-     * @param permStr Permission
-     * @param targetName Target name
-     * @param typeStr ACL type
-     * @return Response
+     * @apiParam sourceId Source ID
+     * @apiParam permStr Permission
+     * @apiParam targetName Target name
+     * @apiParam typeStr ACL type
+     * @apiSuccess Response
      */
     @PUT
     public Response add(@FormParam("source") String sourceId,
@@ -136,10 +136,10 @@ public class AclResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      * 
-     * @param sourceId Source ID
-     * @param permStr Permission
-     * @param targetId Target ID
-     * @return Response
+     * @apiParam sourceId Source ID
+     * @apiParam permStr Permission
+     * @apiParam targetId Target ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{sourceId: [a-z0-9\\-]+}/{perm: [A-Z]+}/{targetId: [a-z0-9\\-]+}")
@@ -209,8 +209,8 @@ public class AclResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      * 
-     * @param search Search query
-     * @return Response
+     * @apiParam search Search query
+     * @apiSuccess Response
      */
     @GET
     @Path("target/search")

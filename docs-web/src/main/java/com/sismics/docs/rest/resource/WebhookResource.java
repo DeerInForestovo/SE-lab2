@@ -38,7 +38,7 @@ public class WebhookResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.6.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     public Response list(@QueryParam("document") String documentId) {
@@ -78,7 +78,7 @@ public class WebhookResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.6.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @PUT
     public Response add(@FormParam("event") String eventStr,
@@ -117,7 +117,7 @@ public class WebhookResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.6.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")

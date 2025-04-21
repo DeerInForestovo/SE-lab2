@@ -51,7 +51,7 @@ public class AuditLogResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     public Response list(@QueryParam("document") String documentId) {

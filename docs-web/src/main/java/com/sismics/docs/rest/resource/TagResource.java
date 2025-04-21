@@ -47,7 +47,7 @@ public class TagResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     @Path("/list")
@@ -105,8 +105,8 @@ public class TagResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param id Tag ID
-     * @return Response
+     * @apiParam id Tag ID
+     * @apiSuccess Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}")
@@ -160,10 +160,10 @@ public class TagResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param name Name
-     * @param color Color
-     * @param parentId Parent ID
-     * @return Response
+     * @apiParam name Name
+     * @apiParam color Color
+     * @apiParam parentId Parent ID
+     * @apiSuccess Response
      */
     @PUT
     public Response add(
@@ -240,10 +240,10 @@ public class TagResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param name Name
-     * @param color Color
-     * @param parentId Parent ID
-     * @return Response
+     * @apiParam name Name
+     * @apiParam color Color
+     * @apiParam parentId Parent ID
+     * @apiSuccess Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}")
@@ -317,8 +317,8 @@ public class TagResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      * 
-     * @param id Tag ID
-     * @return Response
+     * @apiParam id Tag ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")

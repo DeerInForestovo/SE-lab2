@@ -47,7 +47,7 @@ public class RouteResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("start")
@@ -144,7 +144,7 @@ public class RouteResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("validate")
@@ -248,8 +248,8 @@ public class RouteResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiSuccess Response
      */
     @GET
     public Response get(@QueryParam("documentId") String documentId) {
@@ -302,7 +302,7 @@ public class RouteResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @DELETE
     public Response delete(@QueryParam("documentId") String documentId) {

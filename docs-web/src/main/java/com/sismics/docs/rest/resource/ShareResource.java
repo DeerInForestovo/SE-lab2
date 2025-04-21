@@ -47,9 +47,9 @@ public class ShareResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param documentId Document ID
-     * @param name Share name
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam name Share name
+     * @apiSuccess Response
      */
     @PUT
     public Response add(
@@ -112,8 +112,8 @@ public class ShareResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param id Share ID
-     * @return Response
+     * @apiParam id Share ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")

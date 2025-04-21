@@ -77,7 +77,7 @@ public class AppResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     public Response info() {
@@ -125,8 +125,8 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param enabled If true, enable guest login
-     * @return Response
+     * @apiParam enabled If true, enable guest login
+     * @apiSuccess Response
      */
     @POST
     @Path("guest_login")
@@ -153,8 +153,8 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param enabled If true, enable OCR
-     * @return Response
+     * @apiParam enabled If true, enable OCR
+     * @apiSuccess Response
      */
     @POST
     @Path("ocr")
@@ -181,8 +181,8 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param defaultLanguage Default language
-     * @return Response
+     * @apiParam defaultLanguage Default language
+     * @apiSuccess Response
      */
     @POST
     @Path("config")
@@ -217,7 +217,7 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     @Path("config_smtp")
@@ -287,12 +287,12 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param hostname SMTP hostname
-     * @param portStr SMTP port
-     * @param username SMTP username
-     * @param password SMTP password
-     * @param from From address
-     * @return Response
+     * @apiParam hostname SMTP hostname
+     * @apiParam portStr SMTP port
+     * @apiParam username SMTP username
+     * @apiParam password SMTP password
+     * @apiParam from From address
+     * @apiSuccess Response
      */
     @POST
     @Path("config_smtp")
@@ -347,7 +347,7 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     @Path("config_inbox")
@@ -440,14 +440,14 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param enabled True if the inbox scanning is enabled
-     * @param hostname IMAP hostname
-     * @param portStr IMAP port
-     * @param username IMAP username
-     * @param password IMAP password
-     * @param folder IMAP folder
-     * @param tag Tag for created documents
-     * @return Response
+     * @apiParam enabled True if the inbox scanning is enabled
+     * @apiParam hostname IMAP hostname
+     * @apiParam portStr IMAP port
+     * @apiParam username IMAP username
+     * @apiParam password IMAP password
+     * @apiParam folder IMAP folder
+     * @apiParam tag Tag for created documents
+     * @apiSuccess Response
      */
     @POST
     @Path("config_inbox")
@@ -512,7 +512,7 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("test_inbox")
@@ -549,12 +549,12 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param minLevel Filter on logging level
-     * @param tag Filter on logger name / tag
-     * @param message Filter on message
-     * @param limit Page limit
-     * @param offset Page offset
-     * @return Response
+     * @apiParam minLevel Filter on logging level
+     * @apiParam tag Filter on logger name / tag
+     * @apiParam message Filter on message
+     * @apiParam limit Page limit
+     * @apiParam offset Page offset
+     * @apiSuccess Response
      */
     @GET
     @Path("log")
@@ -613,7 +613,7 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("batch/reindex")
@@ -644,7 +644,7 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("batch/clean_storage")
@@ -769,7 +769,7 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.9.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     @Path("config_ldap")
@@ -824,17 +824,17 @@ public class AppResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.9.0
      *
-     * @param enabled LDAP authentication enabled
-     * @param host LDAP server host
-     * @param portStr LDAP server port
-     * @param usessl LDAP use SSL (ldaps)
-     * @param adminDn Admin DN
-     * @param adminPassword Admin password
-     * @param baseDn Base DN
-     * @param filter LDAP filter
-     * @param defaultEmail LDAP default email
-     * @param defaultStorageStr LDAP default storage
-     * @return Response
+     * @apiParam enabled LDAP authentication enabled
+     * @apiParam host LDAP server host
+     * @apiParam portStr LDAP server port
+     * @apiParam usessl LDAP use SSL (ldaps)
+     * @apiParam adminDn Admin DN
+     * @apiParam adminPassword Admin password
+     * @apiParam baseDn Base DN
+     * @apiParam filter LDAP filter
+     * @apiParam defaultEmail LDAP default email
+     * @apiParam defaultStorageStr LDAP default storage
+     * @apiSuccess Response
      */
     @POST
     @Path("config_ldap")

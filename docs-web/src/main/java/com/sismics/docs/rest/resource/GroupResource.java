@@ -53,7 +53,7 @@ public class GroupResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @PUT
     public Response add(@FormParam("parent") String parentName,
@@ -112,7 +112,7 @@ public class GroupResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @POST
     @Path("{groupName: [a-zA-Z0-9_]+}")
@@ -183,7 +183,7 @@ public class GroupResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{groupName: [a-zA-Z0-9_]+}")
@@ -239,9 +239,9 @@ public class GroupResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param groupName Group name
-     * @param username Username
-     * @return Response
+     * @apiParam groupName Group name
+     * @apiParam username Username
+     * @apiSuccess Response
      */
     @PUT
     @Path("{groupName: [a-zA-Z0-9_]+}")
@@ -308,9 +308,9 @@ public class GroupResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param groupName Group name
-     * @param username Username
-     * @return Response
+     * @apiParam groupName Group name
+     * @apiParam username Username
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{groupName: [a-zA-Z0-9_]+}/{username: [a-zA-Z0-9_@.-]+}")
@@ -363,9 +363,9 @@ public class GroupResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param sortColumn Sort index
-     * @param asc If true, ascending sorting, else descending
-     * @return Response
+     * @apiParam sortColumn Sort index
+     * @apiParam asc If true, ascending sorting, else descending
+     * @apiSuccess Response
      */
     @GET
     public Response list(
@@ -406,8 +406,8 @@ public class GroupResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param groupName Group name
-     * @return Response
+     * @apiParam groupName Group name
+     * @apiSuccess Response
      */
     @GET
     @Path("{groupName: [a-zA-Z0-9_]+}")

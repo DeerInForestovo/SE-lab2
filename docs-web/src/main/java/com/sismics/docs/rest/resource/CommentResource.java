@@ -42,9 +42,9 @@ public class CommentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      * 
-     * @param documentId Document ID
-     * @param content Comment content
-     * @return Response
+     * @apiParam documentId Document ID
+     * @apiParam content Comment content
+     * @apiSuccess Response
      */
     @PUT
     public Response add(@FormParam("id") String documentId,
@@ -94,8 +94,8 @@ public class CommentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @param id Comment ID
-     * @return Response
+     * @apiParam id Comment ID
+     * @apiSuccess Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")
@@ -147,8 +147,8 @@ public class CommentResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param documentId DocumentID
-     * @return Response
+     * @apiParam documentId DocumentID
+     * @apiSuccess Response
      */
     @GET
     @Path("{documentId: [a-z0-9\\-]+}")

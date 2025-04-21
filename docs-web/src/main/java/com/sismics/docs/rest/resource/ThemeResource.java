@@ -47,7 +47,7 @@ public class ThemeResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     @Path("/stylesheet")
@@ -76,7 +76,7 @@ public class ThemeResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @return Response
+     * @apiSuccess Response
      */
     @GET
     public Response get() {
@@ -103,10 +103,10 @@ public class ThemeResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param color Theme color
-     * @param name Application name
-     * @param css Custom CSS
-     * @return Response
+     * @apiParam color Theme color
+     * @apiParam name Application name
+     * @apiParam css Custom CSS
+     * @apiSuccess Response
      */
     @POST
     public Response theme(@FormParam("color") String color,
@@ -161,9 +161,9 @@ public class ThemeResource extends BaseResource {
      * @apiPermission admin
      * @apiVersion 1.5.0
      *
-     * @param type Image type
-     * @param imageBodyPart Image data
-     * @return Response
+     * @apiParam type Image type
+     * @apiParam imageBodyPart Image data
+     * @apiSuccess Response
      */
     @PUT
     @Path("image/{type: logo|background}")
@@ -202,8 +202,8 @@ public class ThemeResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @param type Image type
-     * @return Response
+     * @apiParam type Image type
+     * @apiSuccess Response
      */
     @GET
     @Produces("image/*")
@@ -244,7 +244,7 @@ public class ThemeResource extends BaseResource {
     /**
      * Returns the theme configuration object.
      *
-     * @return Theme configuration
+     * @apiSuccess Theme configuration
      */
     private JsonObject getThemeConfig() {
         ConfigDao configDao = new ConfigDao();
@@ -261,7 +261,7 @@ public class ThemeResource extends BaseResource {
     /**
      * Returns a mutable theme configuration.
      *
-     * @return Json builder
+     * @apiSuccess Json builder
      */
     private JsonObjectBuilder getMutableThemeConfig() {
         JsonObject themeConfig = getThemeConfig();
