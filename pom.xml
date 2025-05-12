@@ -175,13 +175,18 @@
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
         </configuration>
-      </plugin>
+      </plugin> -->
 
       <plugin>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${org.eclipse.jetty.jetty-maven-plugin.version}</version>
-      </plugin> -->
+        <configuration>
+          <httpConnector>
+              <port>9090</port>
+          </httpConnector>
+      </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
