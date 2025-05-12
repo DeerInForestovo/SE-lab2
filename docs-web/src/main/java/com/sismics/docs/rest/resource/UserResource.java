@@ -10,12 +10,14 @@ import com.sismics.docs.core.dao.criteria.GroupCriteria;
 import com.sismics.docs.core.dao.criteria.UserCriteria;
 import com.sismics.docs.core.dao.dto.GroupDto;
 import com.sismics.docs.core.dao.dto.UserDto;
+import com.sismics.docs.core.dao.dto.UserRequestDto;
 import com.sismics.docs.core.event.DocumentDeletedAsyncEvent;
 import com.sismics.docs.core.event.FileDeletedAsyncEvent;
 import com.sismics.docs.core.event.PasswordLostEvent;
 import com.sismics.docs.core.model.context.AppContext;
 import com.sismics.docs.core.model.jpa.*;
 import com.sismics.docs.core.util.ConfigUtil;
+import com.sismics.docs.core.util.EncryptionUtil;
 import com.sismics.docs.core.util.RoutingUtil;
 import com.sismics.docs.core.util.authentication.AuthenticationUtil;
 import com.sismics.docs.core.util.jpa.SortCriteria;
@@ -43,6 +45,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+import java.util.Map;
 
 /**
  * User REST resources.
@@ -1141,5 +1145,93 @@ public class UserResource extends BaseResource {
             ThreadLocalContext.get().addAsyncEvent(fileDeletedAsyncEvent);
         }
     }
+
+    /**
+     * Submit a new user registration request.
+     *
+     * @api {post} /user/request Submit user registration request
+     * @apiName PostUserRegistrationRequest
+     * @apiGroup User
+     * @apiParam {String} username Desired username
+     * @apiParam {String} email User email address
+     * @apiParam {String} password Desired password (plaintext, will be hashed)
+     * @apiSuccess {String} status Status OK
+     * @apiError (client) ValidationError Missing or invalid parameters
+     * @apiError (server) ServerError Unable to process request
+     * @apiPermission none
+     * @apiVersion 1.5.0
+     */
+
+    @POST
+    @Path("/request")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response submitUserRequest(UserRequestDto userRequestDto) {
+        try {
+            UserRequest userRequest = new UserRequest()
+                .setUsername(userRequestDto.getUsername())
+                .setEmail(userRequestDto.getEmail())
+                .setPassword(userRequestDto.getPassword());
+            
+            new UserRequestDao().create(userRequest);
+
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("申请失败").build();
+        }
+    }
+
+    @GET
+    @Path("/request")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<UserRequestDto> getUserRequests() {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+        checkBaseFunction(BaseFunction.ADMIN);
+
+        return new UserRequestDao().findAll();  // 返回所有申请
+    }
+
+    @POST
+    @Path("/request/{id}/decision")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response decideUserRequest(@PathParam("id") String requestId, Map<String, String> body) {
+        if (!authenticate()) {
+            throw new ForbiddenClientException();
+        }
+        checkBaseFunction(BaseFunction.ADMIN);
+
+        String decision = body.get("decision"); // "accept" or "reject"
+        UserRequestDao userRequestDao = new UserRequestDao();
+        UserRequest request = userRequestDao.getById(requestId);
+
+        if (request == null || !"pending".equals(request.getStatus())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("无效或已处理的申请").build();
+        }
+
+        if ("accept".equals(decision)) {
+            User user = new User()
+                .setId(UUID.randomUUID().toString())
+                .setUsername(request.getUsername())
+                .setEmail(request.getEmail())
+                .setPassword(request.getPassword())
+                .setRoleId("user")
+                .setCreateDate(new Date())
+                .setStorageCurrent(0L);
+
+            new UserDao().create(user, "admin");  // 可替换成当前管理员 ID
+
+            request.setStatus("accepted");
+        } else if ("reject".equals(decision)) {
+            request.setStatus("rejected");
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("无效的 decision 参数").build();
+        }
+
+        userRequestDao.update(request);
+        return Response.ok().build();
+    }
+
 
 }
