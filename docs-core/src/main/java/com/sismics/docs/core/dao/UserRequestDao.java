@@ -37,16 +37,6 @@ public class UserRequestDao {
     public String create(UserRequest userRequest) throws Exception {
         EntityManager em = ThreadLocalContext.get().getEntityManager();
 
-        // Check for existing username or email (not deleted)
-        Query q = em.createQuery(
-                "select r from UserRequest r where (r.username = :username or r.email = :email) and r.deleteDate is null");
-        q.setParameter("username", userRequest.getUsername());
-        q.setParameter("email", userRequest.getEmail());
-        List<?> l = q.getResultList();
-        if (!l.isEmpty()) {
-            throw new Exception("DuplicateUsernameOrEmail");
-        }
-
         userRequest.setId(UUID.randomUUID().toString());
         userRequest.setCreateDate(new Date());
         userRequest.setStatus("pending");

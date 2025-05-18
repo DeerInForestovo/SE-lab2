@@ -1173,7 +1173,7 @@ public class UserResource extends BaseResource {
     /**
      * Submit a new user registration request.
      *
-     * @api {post} /user/request Submit user registration request
+     * @api {post} /user/register_request Submit user registration request
      * @apiName PostUserRegistrationRequest
      * @apiGroup User
      * @apiParam {String} username Desired username
@@ -1187,26 +1187,39 @@ public class UserResource extends BaseResource {
      */
 
     @POST
-    @Path("/request")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("register_request")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response submitUserRequest(UserRequestDto userRequestDto) {
+    public Response submitUserRequest(
+        @FormParam("username") String username,
+        @FormParam("email") String email,
+        @FormParam("password") String password
+    ) {
         try {
-            UserRequest userRequest = new UserRequest()
-                    .setUsername(userRequestDto.getUsername())
-                    .setEmail(userRequestDto.getEmail())
-                    .setPassword(userRequestDto.getPassword());
-
-            new UserRequestDao().create(userRequest);
-
-            return Response.ok().build();
+            username = ValidationUtil.validateLength(username, "username", 3, 50);
+            ValidationUtil.validateUsername(username, "username");
+            password = ValidationUtil.validateLength(password, "password", 8, 50);
+            email = ValidationUtil.validateLength(email, "email", 1, 100);
+            ValidationUtil.validateEmail(email, "email");
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("申请失败").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
+
+        UserRequest userRequest = new UserRequest()
+                .setUsername(username)
+                .setEmail(email)
+                .setPassword(password);
+
+        try {
+            new UserRequestDao().create(userRequest);
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+
+        return Response.ok().build();
     }
 
     @GET
-    @Path("/request")
+    @Path("register_request")
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserRequestDto> getUserRequests() {
         if (!authenticate()) {
@@ -1218,7 +1231,7 @@ public class UserResource extends BaseResource {
     }
 
     @POST
-    @Path("/request/{id}/decision")
+    @Path("/register_request/{id}/decision")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response decideUserRequest(@PathParam("id") String requestId, Map<String, String> body) {
         if (!authenticate()) {

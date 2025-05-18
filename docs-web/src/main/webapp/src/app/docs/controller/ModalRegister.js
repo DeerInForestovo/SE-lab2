@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Modal password lost controller.
+ * Modal register controller.
  */
-angular.module('docs').controller('Register', function ($scope, $uibModalInstance) {
+angular.module('docs').controller('ModalRegister', function ($scope, $uibModalInstance) {
   $scope.username = '';
   $scope.close = function() {
     $uibModalInstance.close();
