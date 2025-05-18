@@ -1,0 +1,40 @@
+<h1 translate="settings.menu_user_requests"></h1>
+
+<form class="form-horizontal" name="requestForm" novalidate>
+  <div class="form-group" ng-repeat="r in requests">
+    <label class="col-sm-2 control-label">{{ r.username }}</label>
+    <div class="col-sm-4">
+      <p class="form-control-static">{{ r.email }}</p>
+    </div>
+    <div class="col-sm-2">
+      <span class="label"
+            ng-class="{
+              'label-default': r.status === 'pending',
+              'label-success': r.status === 'accepted',
+              'label-danger':  r.status === 'rejected'
+            }">
+        {{ r.status }}
+      </span>
+    </div>
+    <div class="col-sm-4" ng-if="r.status === 'pending'">
+      <button class="btn btn-success btn-xs" ng-click="approve(r)">
+        <span class="fas fa-check"></span> {{ 'settings.accept' | translate }}
+      </button>
+      <button class="btn btn-danger btn-xs" ng-click="reject(r)">
+        <span class="fas fa-times"></span> {{ 'settings.reject' | translate }}
+      </button>
+    </div>
+  </div>
+</form>
+
+<div class="form-group" ng-if="requests.length === 0">
+  <div class="col-sm-offset-2 col-sm-10">
+    <p class="text-muted">{{ 'settings.no_request' | translate }}</p>
+  </div>
+</div>
+
+<div uib-alert ng-repeat="alert in alerts"
+     ng-class="'alert-' + alert.type"
+     close="closeAlert($index)">
+  {{ alert.msg }}
+</div>

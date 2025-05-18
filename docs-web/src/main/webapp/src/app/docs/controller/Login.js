@@ -75,4 +75,41 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
       });
     });
   };
+
+  // Register
+  $scope.openRegister = function () {
+    $uibModal.open({
+      templateUrl: 'partial/docs/register.html',
+      controller: 'ModalRegister'
+    }).result.then(function (registerData) {
+      if (registerData === null) {
+        return;
+      }
+
+      Restangular.one('user').post('register_request', {
+        email: registerData.email,
+        username: registerData.username,
+        password: registerData.password
+      }).then(function () {
+        var title = $translate.instant('register.success_title');
+        var msg = $translate.instant('register.success_message', { username: registerData.username });
+        var btns = [{ result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary' }];
+        $dialog.messageBox(title, msg, btns);
+      }, function (error) {
+        var title, msg;
+        console.log(error);
+
+        if (error.status === 400) {
+          title = $translate.instant('register.validation_error_title');
+          msg = error.data || $translate.instant('register.validation_error_message');
+        } else {
+          title = $translate.instant('register.error_title');
+          msg = error.data || $translate.instant('register.error_message');
+        }
+
+        var btns = [{ result: 'ok', label: $translate.instant('ok'), cssClass: 'btn-primary' }];
+        $dialog.messageBox(title, msg, btns);
+      });
+    });
+  };
 });
