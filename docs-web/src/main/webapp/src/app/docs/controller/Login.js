@@ -78,6 +78,7 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
 
   // Register
   $scope.openRegister = function () {
+    console.log("here")
     $uibModal.open({
       templateUrl: 'partial/docs/register.html',
       controller: 'ModalRegister'
@@ -86,7 +87,7 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
         return;
       }
 
-      Restangular.one('user').post('register', {
+      Restangular.one('request').post('', {
         email: registerData.email,
         username: registerData.username,
         password: registerData.password
@@ -103,21 +104,4 @@ angular.module('docs').controller('Login', function(Restangular, $scope, $rootSc
       });
     });
   };
-
-  angular.module('app').controller('ModalRegister', function ($scope, $uibModalInstance) {
-    $scope.register = {};
-
-    $scope.cancel = function () {
-      $uibModalInstance.dismiss('cancel');
-    };
-
-    $scope.submitRegister = function () {
-      if ($scope.register.email && $scope.register.username && $scope.register.password) {
-        $uibModalInstance.close($scope.register);
-      } else {
-        alert('Please fill out all fields.');
-      }
-    };
-  });
-
 });
