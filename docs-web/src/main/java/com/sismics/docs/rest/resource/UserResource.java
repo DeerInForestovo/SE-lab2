@@ -1232,14 +1232,20 @@ public class UserResource extends BaseResource {
 
     @POST
     @Path("/register_request/{id}/decision")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response decideUserRequest(@PathParam("id") String requestId, Map<String, String> body) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response decideUserRequest(
+        @PathParam("id") String requestId,
+        @FormParam("decision") String decision
+    ) {
         if (!authenticate()) {
             throw new ForbiddenClientException();
         }
         checkBaseFunction(BaseFunction.ADMIN);
 
-        String decision = body.get("decision"); // "accept" or "reject"
+        if (!"accept".equals(decision) && !"reject".equals(decision)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("无效的 decision 参数").build();
+        }
+
         UserRequestDao userRequestDao = new UserRequestDao();
         UserRequest request = userRequestDao.getById(requestId);
 
@@ -1253,32 +1259,29 @@ public class UserResource extends BaseResource {
                     .setUsername(request.getUsername())
                     .setEmail(request.getEmail())
                     .setPassword(request.getPassword())
-                    .setRoleId("user")
+                    .setRoleId(Constants.DEFAULT_USER_ROLE)
                     .setCreateDate(new Date())
-                    .setStorageCurrent(0L);
-            try {
-                new UserDao().create(user, "admin"); // 可替换成当前管理员 ID
+                    .setPrivateKey(EncryptionUtil.generatePrivateKey())
+                    .setStorageQuota((long)1024)
+                    .setStorageCurrent(0L)
+                    .setOnboarding(true);
 
+            try {
+                new UserDao().create(user, principal.getId());
             } catch (Exception e) {
                 if ("AlreadyExistingUsername".equals(e.getMessage())) {
                     return Response.status(Response.Status.CONFLICT)
-                            .entity("用户名已存在，无法批准")
-                            .build();
+                            .entity("用户名已存在，无法批准").build();
                 }
-                return Response.serverError()
-                        .entity("创建用户失败")
-                        .build();
+                return Response.serverError().entity("创建用户失败").build();
             }
 
             request.setStatus("accepted");
-        } else if ("reject".equals(decision)) {
-            request.setStatus("rejected");
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("无效的 decision 参数").build();
+            request.setStatus("rejected");
         }
 
         userRequestDao.updateStatus(request.getId(), request.getStatus(), "admin");
         return Response.ok().build();
     }
-
 }
