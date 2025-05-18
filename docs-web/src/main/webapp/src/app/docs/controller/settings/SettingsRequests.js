@@ -3,10 +3,7 @@
 angular.module('docs').controller('SettingsRequests', function ($scope, Restangular, $dialog, $translate) {
   $scope.requests = [];
 
-  console.log("register request load");
-
   function loadRequests() {
-    console.log("load")
     Restangular.one('user').all('register_request').getList().then(function (data) {
       $scope.requests = data;
     });

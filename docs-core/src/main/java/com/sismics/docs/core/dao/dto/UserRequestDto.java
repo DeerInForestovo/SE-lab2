@@ -1,6 +1,8 @@
 package com.sismics.docs.core.dao.dto;
 
 import com.google.common.base.MoreObjects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 
 /**
  * User request DTO.
@@ -37,6 +39,7 @@ public class UserRequestDto {
      */
     private Long createTimestamp;
 
+    @JsonProperty("id")
     public String getId() {
         return id;
     }
@@ -45,6 +48,7 @@ public class UserRequestDto {
         this.id = id;
     }
 
+    @JsonProperty("username")
     public String getUsername() {
         return username;
     }
@@ -61,6 +65,7 @@ public class UserRequestDto {
         this.password = password;
     }
 
+    @JsonProperty("email")
     public String getEmail() {
         return email;
     }
@@ -69,6 +74,7 @@ public class UserRequestDto {
         this.email = email;
     }
 
+    @JsonProperty("status")
     public String getStatus() {
         return status;
     }
@@ -94,4 +100,14 @@ public class UserRequestDto {
                 .add("status", status)
                 .toString();
     }
+
+    public UserRequestDto(String id, String username, String email, String status, Date createDate) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.status = status;
+        this.createTimestamp = createDate != null ? createDate.getTime() : null;
+    }
+
+    public UserRequestDto() {}
 }
