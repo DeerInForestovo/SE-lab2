@@ -10,6 +10,23 @@ angular.module('docs').controller('DocumentView', function ($scope, $rootScope, 
   }, function (response) {
     $scope.error = response;
   });
+  
+  $scope.targetLang = '';
+
+  $scope.loadDocument = function () {
+    var params = {
+      to: $scope.targetLang
+    };
+    Restangular.one('document', $stateParams.id).get(params).then(function (data) {
+      $scope.document = data;
+    }, function (response) {
+      $scope.error = response;
+    });
+  };
+
+  $scope.onTranslateStatusChange = function () {
+    $scope.loadDocument();
+  };
 
   // Load comments from server
   Restangular.one('comment', $stateParams.id).get().then(function (data) {
@@ -22,6 +39,11 @@ angular.module('docs').controller('DocumentView', function ($scope, $rootScope, 
    * Add a comment.
    */
   $scope.comment = '';
+
+  $scope.onTranslateStatusChange = function () {
+    $scope.loadDocument();
+  }
+
   $scope.addComment = function () {
     if ($scope.comment.length === 0) {
       return;

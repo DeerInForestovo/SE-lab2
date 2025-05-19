@@ -50,6 +50,7 @@ import com.sismics.util.context.ThreadLocalContext;
 import com.sismics.util.mime.MimeType;
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -64,10 +65,15 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.StreamingOutput;
+import jakarta.ws.rs.core.UriBuilder;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.h2.security.SHA256;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -75,19 +81,20 @@ import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.UUID;
+import java.time.Duration;
+import java.util.*;
 
 /**
  * Document REST resources.
@@ -96,6 +103,58 @@ import java.util.UUID;
  */
 @Path("/document")
 public class DocumentResource extends BaseResource {
+    private static final Logger logger = LoggerFactory.getLogger(DocumentResource.class);
+
+    public static String truncate(String q) {
+        if (q == null) {
+            return null;
+        }
+        int len = q.length();
+        return len <= 20 ? q : (q.substring(0, 10) + len + q.substring(len - 10, len));
+    }
+
+    public static String getDigest(String string) {
+        if (string == null) {
+            return null;
+        }
+        char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        byte[] btInput = string.getBytes(StandardCharsets.UTF_8);
+        try {
+            MessageDigest mdInst = MessageDigest.getInstance("SHA-256");
+            mdInst.update(btInput);
+            byte[] md = mdInst.digest();
+            int j = md.length;
+            char str[] = new char[j * 2];
+            int k = 0;
+            for (byte byte0 : md) {
+                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
+                str[k++] = hexDigits[byte0 & 0xf];
+            }
+            return new String(str);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    private static String getFormDataAsString(Map<String, String> formData) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : formData.entrySet()) {
+            try {
+                String key = entry.getKey() != null ? entry.getKey() : "";
+                String value = entry.getValue() != null ? entry.getValue() : "";
+                sb.append(URLEncoder.encode(key, "UTF-8"));
+                sb.append('=');
+                sb.append(URLEncoder.encode(value, "UTF-8"));
+                sb.append('&');
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException("Encoding not supported", e);
+            }
+        }
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
+        return sb.toString();
+    }
 
     /**
      * Returns a document.
@@ -168,16 +227,17 @@ public class DocumentResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @apiParam documentId Document ID
-     * @apiParam shareId Share ID
-     * @apiSuccess Response
+     * @param documentId Document ID
+     * @param shareId Share ID
+     * @return Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}")
     public Response get(
             @PathParam("id") String documentId,
             @QueryParam("share") String shareId,
-            @QueryParam("files") Boolean files) {
+            @QueryParam("files") Boolean files,
+            @QueryParam("to") String toLang) {
         authenticate();
 
         DocumentDao documentDao = new DocumentDao();
@@ -197,6 +257,64 @@ public class DocumentResource extends BaseResource {
                 .add("source", JsonUtil.nullable(documentDto.getSource()))
                 .add("subject", JsonUtil.nullable(documentDto.getSubject()))
                 .add("type", JsonUtil.nullable(documentDto.getType()));
+
+        String language = documentDto.getLanguage();
+        if (toLang != "") {
+            logger.info("Start translating document");
+            String from = "auto";
+            if (language.equals("eng"))
+                from = "en";
+            else if (language.equals("chi_sim"))
+                from = "zh-CHS";
+            
+            String key = ConfigLoader.getAppKey();
+            String secret = ConfigLoader.getAppSecret();
+
+            Map<String, String> formData = new HashMap<>();
+            String q = documentDto.getDescription();
+            String salt = UUID.randomUUID().toString();
+            String curtime = String.valueOf(System.currentTimeMillis() / 1000);
+            String signStr = key + truncate(q) + salt + curtime + secret;
+            String sign = getDigest(signStr);
+
+            formData.put("q", q);
+            formData.put("from", from);
+            formData.put("to", toLang);
+            formData.put("appKey", key);
+            formData.put("salt", salt);
+            formData.put("sign", sign);
+            formData.put("signType", "v3");
+            formData.put("curtime", curtime);
+
+            logger.info(formData.toString());
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://openapi.youdao.com/translate_html"))
+                    .timeout(Duration.ofMinutes(1))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Accept", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(getFormDataAsString(formData)))
+                    .build();
+            logger.info("Sending to translation api");
+            try {
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                JSONObject jsonObject = new JSONObject(response.body());
+                if (jsonObject.has("data")) {
+                    logger.info("Translate success");
+                    String translateContent = jsonObject.getJSONObject("data").getString("translation");
+                    document.remove("description");
+                    document.add("description", translateContent);
+                }
+                else {
+                        logger.info("Translate failed");
+                        logger.info(jsonObject.getString("errorCode"));
+                }
+            }
+            catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+        }
 
         List<TagDto> tagDtoList = null;
         if (principal.isAnonymous()) {
@@ -303,12 +421,12 @@ public class DocumentResource extends BaseResource {
      * @apiPermission none
      * @apiVersion 1.5.0
      *
-     * @apiParam documentId Document ID
-     * @apiParam shareId Share ID
-     * @apiParam metadata Export metadata
-     * @apiParam fitImageToPage Fit images to page
-     * @apiParam marginStr Margins
-     * @apiSuccess Response
+     * @param documentId Document ID
+     * @param shareId Share ID
+     * @param metadata Export metadata
+     * @param fitImageToPage Fit images to page
+     * @param marginStr Margins
+     * @return Response
      */
     @GET
     @Path("{id: [a-z0-9\\-]+}/pdf")
@@ -416,13 +534,13 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @apiParam limit Page limit
-     * @apiParam offset Page offset
-     * @apiParam sortColumn Sort column
-     * @apiParam asc Sorting
-     * @apiParam search Search query
-     * @apiParam files Files list
-     * @apiSuccess Response
+     * @param limit Page limit
+     * @param offset Page offset
+     * @param sortColumn Sort column
+     * @param asc Sorting
+     * @param search Search query
+     * @param files Files list
+     * @return Response
      */
     @GET
     @Path("list")
@@ -552,15 +670,15 @@ public class DocumentResource extends BaseResource {
      * @apiDescription Get documents exposed as a POST endpoint to allow longer search parameters, see the GET endpoint for the API info
      * @apiName PostDocumentList
      * @apiGroup Document
-     * @apiVersion 1.12.0
+     * @apiVersion 1.5.0
      *
-     * @apiParam limit      Page limit
-     * @apiParam offset     Page offset
-     * @apiParam sortColumn Sort column
-     * @apiParam asc        Sorting
-     * @apiParam search     Search query
-     * @apiParam files      Files list
-     * @apiSuccess Response
+     * @param limit      Page limit
+     * @param offset     Page offset
+     * @param sortColumn Sort column
+     * @param asc        Sorting
+     * @param search     Search query
+     * @param files      Files list
+     * @return Response
      */
     @POST
     @Path("list")
@@ -638,23 +756,23 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @apiParam title Title
-     * @apiParam description Description
-     * @apiParam subject Subject
-     * @apiParam identifier Identifier
-     * @apiParam publisher Publisher
-     * @apiParam format Format
-     * @apiParam source Source
-     * @apiParam type Type
-     * @apiParam coverage Coverage
-     * @apiParam rights Rights
-     * @apiParam tagList Tags
-     * @apiParam relationList Relations
-     * @apiParam metadataIdList Metadata ID list
-     * @apiParam metadataValueList Metadata value list
-     * @apiParam language Language
-     * @apiParam createDateStr Creation date
-     * @apiSuccess Response
+     * @param title Title
+     * @param description Description
+     * @param subject Subject
+     * @param identifier Identifier
+     * @param publisher Publisher
+     * @param format Format
+     * @param source Source
+     * @param type Type
+     * @param coverage Coverage
+     * @param rights Rights
+     * @param tagList Tags
+     * @param relationList Relations
+     * @param metadataIdList Metadata ID list
+     * @param metadataValueList Metadata value list
+     * @param language Language
+     * @param createDateStr Creation date
+     * @return Response
      */
     @PUT
     public Response add(
@@ -772,9 +890,9 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @apiParam title Title
-     * @apiParam description Description
-     * @apiSuccess Response
+     * @param title Title
+     * @param description Description
+     * @return Response
      */
     @POST
     @Path("{id: [a-z0-9\\-]+}")
@@ -890,8 +1008,8 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @apiParam fileBodyPart File to import
-     * @apiSuccess Response
+     * @param fileBodyPart File to import
+     * @return Response
      */
     @PUT
     @Path("eml")
@@ -984,8 +1102,8 @@ public class DocumentResource extends BaseResource {
      * @apiPermission user
      * @apiVersion 1.5.0
      *
-     * @apiParam id Document ID
-     * @apiSuccess Response
+     * @param id Document ID
+     * @return Response
      */
     @DELETE
     @Path("{id: [a-z0-9\\-]+}")
@@ -1031,8 +1149,8 @@ public class DocumentResource extends BaseResource {
     /**
      * Update tags list on a document.
      *
-     * @apiParam documentId Document ID
-     * @apiParam tagList Tag ID list
+     * @param documentId Document ID
+     * @param tagList Tag ID list
      */
     private void updateTagList(String documentId, List<String> tagList) {
         if (tagList != null) {
@@ -1056,8 +1174,8 @@ public class DocumentResource extends BaseResource {
     /**
      * Update relations list on a document.
      *
-     * @apiParam documentId Document ID
-     * @apiParam relationList Relation ID list
+     * @param documentId Document ID
+     * @param relationList Relation ID list
      */
     private void updateRelationList(String documentId, List<String> relationList) {
         if (relationList != null) {
@@ -1096,5 +1214,14 @@ public class DocumentResource extends BaseResource {
                     .add("color", tagDto.getColor()));
         }
         return tags;
+    }
+}
+
+class ConfigLoader {
+    static String getAppKey() {
+        return "08c46cb3e63b80b5";
+    }
+    static String getAppSecret() {
+        return "7ub7xcFgWAiLQPEhW5PKXT8brAXLINHq";
     }
 }
