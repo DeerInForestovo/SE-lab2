@@ -139,15 +139,6 @@ module.exports = function(grunt) {
           to: new Date().getTime()
         }]
       }
-    },
-    apidoc: {
-      generate: {
-        src: '../java/',
-        dest: 'dist/apidoc/',
-        options: {
-          template: "node_modules/apidoc/template/"
-        },
-      }
     }
   });
 
